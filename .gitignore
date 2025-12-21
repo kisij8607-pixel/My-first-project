@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.idea/
+*.iml
+rashifrochik.py
+scratch.py
+archivator.py
