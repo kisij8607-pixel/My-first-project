@@ -35,17 +35,18 @@ def zakryvashka():
         return
     try:
         print("архивация началась")
+        archive = selectedfile
         sostoyanie['value'] = 0
         root.update()
-        with zipfile.ZipFile(selectedfile + ".zip", 'w') as zipf:
+        with zipfile.ZipFile(archive + ".zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
             #50%
             sostoyanie['value'] = 50
             root.update()
-            zipf.write(selectedfile)
+            zipf.write(selectedfile, os.path.basename(selectedfile))
             sostoyanie['value'] = 100
             root.update()
             messagebox.showinfo("Ура получилось,", f"Архив создан!\n{selectedfile}.zip")
-            print(f"создан архив {selectedfile}.zip")
+            print(f"создан архив {selectedfile}")
     except Exception as e:
         messagebox.showerror("Ошибка", f"Не удалось:\n{str(e)}")
         sostoyanie['value'] = 0
