@@ -3,6 +3,7 @@ import gzip
 import os
 import shutil
 import tkinter as tk
+from random import choice
 from tkinter import ttk, messagebox, filedialog
 import zipfile
 root = tk.Tk()
@@ -11,7 +12,9 @@ root.geometry("800x600")
 root.resizable(True, False)
 tk.Label(root, text="Архиватор шпала").pack()
 selectedfile = None
+sap = None
 def open_file():
+    global selectedfile
     filename = filedialog.askopenfilename(
         filetypes=[
             ("Изображение", "*.jpg *.jpeg *.png *.gif"),
@@ -19,33 +22,51 @@ def open_file():
             ("Все файлы", "*.*")
         ]
     )
-    global selectedfile
     if filename:
         selectedfile = filename
         print(f"Пользователь выбрал: {filename}")
         fileukaz.config(text=f"Выбран: {filename}")
-
+def ssf():
+    global sap
+    choice = messagebox.askquestion(
+        "Куда сохранить файл?",
+        "Сохранить рядом с исходным файлом\n(Нет в другую папку)"
+    )
+    if not selectedfile:
+        messagebox.showwarning("Выбери сначало файл", "Файл Выбери")
+        return
+    if choice == "yes":
+        sap = os.path.dirname(selectedfile)
+    else:
+        sap = filedialog.askdirectory()
 tk.Button(root, text="архивируй свой пакет", command=open_file).pack()
-
+tk.Button(root, text="Выбери куда надо", command=ssf,)
 fileukaz = tk.Label(root, text="Файл не выбран")
 fileukaz.pack()
 def zakryvashka():
+    global sap
     if not selectedfile:
-        messagebox.showerror('Ошибка долбаеба', 'Ебанутый?Выбери файл')
+        messagebox.showerror('Ошибка', 'Выбери файл')
         return
     try:
         print("архивация началась")
-        archive = selectedfile
+        if sap:
+            folder = sap
+        else:
+            folder = os.path.dirname(selectedfile)
+
         sostoyanie['value'] = 0
         root.update()
-        with zipfile.ZipFile(archive + ".zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
-            #50%
+        imya = os.path.basename(selectedfile)
+        imyp = os.path.splitext(imya)[0]
+        arch =os.path.join(folder, imyp + ".zip")
+        with zipfile.ZipFile(arch, 'w', zipfile.ZIP_DEFLATED) as zip_ref:
             sostoyanie['value'] = 50
             root.update()
-            zipf.write(selectedfile, os.path.basename(selectedfile))
+            zip_ref.write(selectedfile, imya)
             sostoyanie['value'] = 100
             root.update()
-            messagebox.showinfo("Ура получилось,", f"Архив создан!\n{selectedfile}.zip")
+            messagebox.showinfo("Ура получилось,", f"Архив создан!\n{arch}")
             print(f"создан архив {selectedfile}")
     except Exception as e:
         messagebox.showerror("Ошибка", f"Не удалось:\n{str(e)}")
