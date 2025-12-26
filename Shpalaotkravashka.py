@@ -4,7 +4,6 @@ import os
 import shutil
 import tkinter as tk
 import zipfile
-from PIL import Image, ImageTk
 from random import choice
 from tkinter import ttk, messagebox, filedialog
 root = tk.Tk()
@@ -13,11 +12,16 @@ root.geometry("800x600")
 root.resizable(True, False)
 tk.Label(root, text="Архиватор шпала").pack()
 try:
-    img = Image.open("icon.png")
-    photo = ImageTk.PhotoImage(img)
-    root.iconphoto(False, photo)
-except Exception as e:
-    print(e)
+    from PIL import Image, ImageTk
+    try:
+        img = Image.open("icon.png")
+        photo = ImageTk.PhotoImage(img)
+        root.iconphoto(False, photo)
+        print("получилось с иконкой")
+    except Exception as e:
+        messagebox.showerror("ошибка","скачайте pillow")
+except ImportError as e:
+    print("скачай pip")
 selectedfile = None
 sap = None
 def open_file():
@@ -61,7 +65,6 @@ def zakryvashka():
             folder = sap
         else:
             folder = os.path.dirname(selectedfile)
-
         sostoyanie['value'] = 0
         root.update()
         imya = os.path.basename(selectedfile)
