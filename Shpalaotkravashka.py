@@ -7,7 +7,6 @@ import zipfile
 from PIL import Image, ImageTk
 from random import choice
 from tkinter import ttk, messagebox, filedialog
-
 root = tk.Tk()
 root.title("Расшифратор")
 root.geometry("800x600")
