@@ -3,14 +3,22 @@ import gzip
 import os
 import shutil
 import tkinter as tk
+import zipfile
+from PIL import Image, ImageTk
 from random import choice
 from tkinter import ttk, messagebox, filedialog
-import zipfile
+
 root = tk.Tk()
 root.title("Расшифратор")
 root.geometry("800x600")
 root.resizable(True, False)
 tk.Label(root, text="Архиватор шпала").pack()
+try:
+    img = Image.open("icon.png")
+    photo = ImageTk.PhotoImage(img)
+    root.iconphoto(False, photo)
+except Exception as e:
+    print(e)
 selectedfile = None
 sap = None
 def open_file():
